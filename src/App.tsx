@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import './App.css'
 
 // Icons as simple SVG components
@@ -218,6 +219,8 @@ function App() {
       <footer className="footer fade-in" style={{ animationDelay: '0.35s' }}>
         <p>built with care · 2026</p>
       </footer>
+
+      <Analytics />
     </div>
   )
 }
