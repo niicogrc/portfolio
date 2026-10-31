@@ -37,6 +37,7 @@ body {
   font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: 15px;
   line-height: 1.7;
+  text-transform: lowercase;
   transition: background 0.3s, color 0.3s;
 }
 
@@ -188,12 +189,14 @@ body {
 .hero-content { flex: 1; min-width: 0; }
 
 .hero-title {
-  font-size: clamp(1.7rem, 4.5vw, 2.5rem);
+  font-size: clamp(1.5rem, 4.5vw, 2.1rem);
   line-height: 1.2;
   font-weight: 700;
   margin: 8px 0 14px;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
+.hero-title .highlight { white-space: nowrap; }
 
 .hero-description {
   color: var(--muted);
