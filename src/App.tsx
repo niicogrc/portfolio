@@ -52,172 +52,212 @@ const blogPosts = [
   }
 ]
 
+const TYPED_COMMAND = 'whoami'
+
+function Prompt({ path = '~', children }: { path?: string; children: React.ReactNode }) {
+  return (
+    <p className="prompt" aria-hidden="false">
+      <span className="prompt-user">nico@valencia</span>
+      <span className="prompt-sep">:</span>
+      <span className="prompt-path">{path}</span>
+      <span className="prompt-dollar">$</span>
+      <span className="prompt-cmd">{children}</span>
+    </p>
+  )
+}
+
 function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    // Initialize from localStorage or default to dark
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme') as 'dark' | 'light' | null
       return saved || 'dark'
     }
     return 'dark'
   })
+  const [typed, setTyped] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? TYPED_COMMAND : ''
+  )
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  useEffect(() => {
+    if (typed.length >= TYPED_COMMAND.length) return
+    const id = setTimeout(() => setTyped(TYPED_COMMAND.slice(0, typed.length + 1)), 110)
+    return () => clearTimeout(id)
+  }, [typed])
+
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark')
   }
 
+  const done = typed.length >= TYPED_COMMAND.length
+
   return (
     <div className="container">
-      {/* Navigation */}
-      <nav className="navbar">
-        <div className="nav-links">
-          <a href="#about" className="nav-link">Sobre mí</a>
-          <a href="#experience" className="nav-link">Experiencia</a>
-          <a href="#blog" className="nav-link">Blog</a>
-        </div>
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-        >
-          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-        </button>
-      </nav>
-
-      <main className="main">
-        {/* Hero Section */}
-        <section className="hero fade-in" id="hero">
-          <div className="hero-content">
-            <h1 className="hero-title">
-              Buenas! Me llamo <span className="highlight">Nico García</span>
-            </h1>
-            
-            <p className="hero-description">
-              <span className="highlight">Product Engineer</span> en <span className="company">Shakers</span>. 
-              De Valencia, España 🇪🇸. Especializado en convertir ideas en productos que funcionan.
-            </p>
-
-            <div className="hero-buttons">
-              <a href="mailto:nicogtdm@gmail.com" className="btn btn-primary">
-                <MailIcon />
-                Contáctame
-              </a>
-              <a href="https://www.linkedin.com/in/nicolasgarciacosta/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                <LinkedInIcon />
-                LinkedIn
-              </a>
-              <a href="https://github.com/niicogrc" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
-                <GitHubIcon />
-                GitHub
-              </a>
-            </div>
+      <div className="term">
+        <header className="term-bar">
+          <div className="term-dots" aria-hidden="true">
+            <span className="dot dot-r" /><span className="dot dot-y" /><span className="dot dot-g" />
           </div>
-          <div className="hero-avatar">
-            <img src="/nico1.jpg" alt="Nico García" />
-          </div>
-        </section>
+          <span className="term-title">nico@valencia: ~ — zsh</span>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+        </header>
 
-        {/* About */}
-        <section className="section fade-in" id="about" style={{ animationDelay: '0.2s' }}>
-          <h2 className="section-title">
-            <span className="section-icon">👤</span>
-            Sobre mí
-          </h2>
-          <div className="about-card">
-            <p className="about-text">
-              Vivo en <span className="highlight">Valencia</span>. Cuando no estoy programando, 
-              me encontrarás en el <span className="highlight">gym</span>, jugando 
-              <span className="highlight"> videojuegos</span> o escuchando <span className="highlight">música</span>.
-            </p>
-          </div>
-        </section>
+        <nav className="navbar" aria-label="Secciones">
+          <a href="#about" className="nav-link">about.md</a>
+          <a href="#experience" className="nav-link">experience/</a>
+          <a href="#blog" className="nav-link">blog/</a>
+          <a href="#contact" className="nav-link">contact.sh</a>
+        </nav>
 
-        {/* Work */}
-        <section className="section fade-in" id="experience" style={{ animationDelay: '0.25s' }}>
-          <h2 className="section-title">
-            <span className="section-icon">💼</span>
-            Experiencia
-          </h2>
-          
-          {/* Shakers */}
-          <div className="work-item">
-            <div className="work-timeline">
-              <div className="work-dot"></div>
-              <div className="work-line"></div>
-            </div>
-            <div className="work-content">
-              <div className="work-header">
-                <img src="/Shakers_logo.png" alt="Shakers" className="work-logo" />
-                <span className="work-company">Shakers</span>
-                <span className="work-badge">Actualmente</span>
-              </div>
-              <p className="work-role">Product Engineer</p>
-              <p className="work-period">jul. 2025 - actualidad · 7 meses</p>
-              <p className="work-description">
-                Desarrollo de soluciones de alto impacto como parte del equipo de Producto. 
-                Trabajando con metodología de sprints en un equipo dual, enfocado en IA, desarrollo full stack y mejora continua.
+        <main className="main">
+          {/* Hero */}
+          <section className="hero fade-in" id="hero">
+            <div className="hero-content">
+              <p className="prompt">
+                <span className="prompt-user">nico@valencia</span>
+                <span className="prompt-sep">:</span>
+                <span className="prompt-path">~</span>
+                <span className="prompt-dollar">$</span>
+                <span className="prompt-cmd">{typed}</span>
+                {!done && <span className="cursor" aria-hidden="true" />}
               </p>
-              <div className="work-subrole">
-                <p className="work-role">Empleado en prácticas</p>
-                <p className="work-period">feb. 2025 - jul. 2025 · 6 meses</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Microsoft */}
-          <div className="work-item">
-            <div className="work-timeline">
-              <div className="work-dot work-dot-secondary"></div>
-              <div className="work-line"></div>
-            </div>
-            <div className="work-content">
-              <div className="work-header">
-                <img src="/Microsoft_logo.svg" alt="Microsoft" className="work-logo" />
-                <span className="work-company">Microsoft</span>
-              </div>
-              <p className="work-role">Junior Ambassador</p>
-              <p className="work-period">feb. 2025 - jul. 2025 · 6 meses</p>
-              <p className="work-description">
-                Apoyo al equipo de Copilot AI Adoption y Product Led Growth. 
-                Ayudando a impulsar la integración de herramientas de IA generativa en diversas unidades de negocio.
+              <h1 className="hero-title">
+                Buenas! Me llamo <span className="highlight">Nico García</span>
+              </h1>
+              <p className="hero-description">
+                <span className="highlight">Product Engineer</span> en <span className="company">Shakers</span>.
+                De Valencia, España 🇪🇸. Especializado en convertir ideas en productos que funcionan.
               </p>
-              <div className="work-skills">
-                <span className="skill-tag">IA</span>
-                <span className="skill-tag">Copilot Studio</span>
+              <Prompt>
+                <span className="cmd-name">open</span> <span className="cmd-flag">--links</span>
+              </Prompt>
+              <div className="hero-buttons" id="contact">
+                <a href="mailto:nicogtdm@gmail.com" className="btn btn-primary">
+                  <MailIcon />
+                  Contáctame
+                </a>
+                <a href="https://www.linkedin.com/in/nicolasgarciacosta/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                  <LinkedInIcon />
+                  LinkedIn
+                </a>
+                <a href="https://github.com/niicogrc" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                  <GitHubIcon />
+                  GitHub
+                </a>
               </div>
             </div>
-          </div>
-        </section>
+            <div className="hero-avatar">
+              <img src="/nico1.jpg" alt="Nico García" />
+              <span className="avatar-caption">nico1.jpg</span>
+            </div>
+          </section>
 
-        {/* Blog */}
-        <section className="section fade-in" id="blog" style={{ animationDelay: '0.3s' }}>
-          <h2 className="section-title">
-            <span className="section-icon">✍️</span>
-            Blog
-          </h2>
-          <div className="blog-list">
-            {blogPosts.map(post => (
-              <article key={post.id} className="blog-post">
-                <div className="blog-header">
-                  <h3 className="blog-title">{post.title}</h3>
-                  <span className="blog-date">{post.date}</span>
+          {/* About */}
+          <section className="section fade-in" id="about" style={{ animationDelay: '0.2s' }}>
+            <Prompt><span className="cmd-name">cat</span> about.md</Prompt>
+            <div className="about-card">
+              <h2 className="section-title"># Sobre mí</h2>
+              <p className="about-text">
+                Vivo en <span className="highlight">Valencia</span>. Cuando no estoy programando,
+                me encontrarás en el <span className="highlight">gym</span>, jugando
+                <span className="highlight"> videojuegos</span> o escuchando <span className="highlight">música</span>.
+              </p>
+            </div>
+          </section>
+
+          {/* Work */}
+          <section className="section fade-in" id="experience" style={{ animationDelay: '0.25s' }}>
+            <Prompt><span className="cmd-name">git</span> log <span className="cmd-flag">--experience</span></Prompt>
+            <h2 className="section-title"># Experiencia</h2>
+
+            {/* Shakers */}
+            <div className="work-item">
+              <div className="work-timeline">
+                <div className="work-dot"></div>
+                <div className="work-line"></div>
+              </div>
+              <div className="work-content">
+                <div className="work-header">
+                  <img src="/Shakers_logo.png" alt="Shakers" className="work-logo" />
+                  <span className="work-company">Shakers</span>
+                  <span className="work-badge">HEAD → actualmente</span>
                 </div>
-                <p className="blog-excerpt">{post.excerpt}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </main>
+                <p className="work-role">Product Engineer</p>
+                <p className="work-period">jul. 2025 - actualidad · 7 meses</p>
+                <p className="work-description">
+                  Desarrollo de soluciones de alto impacto como parte del equipo de Producto.
+                  Trabajando con metodología de sprints en un equipo dual, enfocado en IA, desarrollo full stack y mejora continua.
+                </p>
+                <div className="work-subrole">
+                  <p className="work-role">Empleado en prácticas</p>
+                  <p className="work-period">feb. 2025 - jul. 2025 · 6 meses</p>
+                </div>
+              </div>
+            </div>
 
-      {/* Footer */}
-      <footer className="footer fade-in" style={{ animationDelay: '0.35s' }}>
-        <p>built with care · 2026</p>
-      </footer>
+            {/* Microsoft */}
+            <div className="work-item">
+              <div className="work-timeline">
+                <div className="work-dot work-dot-secondary"></div>
+                <div className="work-line"></div>
+              </div>
+              <div className="work-content">
+                <div className="work-header">
+                  <img src="/Microsoft_logo.svg" alt="Microsoft" className="work-logo" />
+                  <span className="work-company">Microsoft</span>
+                </div>
+                <p className="work-role">Junior Ambassador</p>
+                <p className="work-period">feb. 2025 - jul. 2025 · 6 meses</p>
+                <p className="work-description">
+                  Apoyo al equipo de Copilot AI Adoption y Product Led Growth.
+                  Ayudando a impulsar la integración de herramientas de IA generativa en diversas unidades de negocio.
+                </p>
+                <div className="work-skills">
+                  <span className="skill-tag">IA</span>
+                  <span className="skill-tag">Copilot Studio</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Blog */}
+          <section className="section fade-in" id="blog" style={{ animationDelay: '0.3s' }}>
+            <Prompt><span className="cmd-name">ls</span> <span className="cmd-flag">-la</span> blog/</Prompt>
+            <h2 className="section-title"># Blog</h2>
+            <div className="blog-list">
+              {blogPosts.map(post => (
+                <article key={post.id} className="blog-post">
+                  <div className="blog-header">
+                    <h3 className="blog-title">{post.title}</h3>
+                    <span className="blog-date">{post.date}</span>
+                  </div>
+                  <p className="blog-excerpt">{post.excerpt}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="section end-prompt">
+            <Prompt>
+              <span className="cursor" aria-hidden="true" />
+            </Prompt>
+          </section>
+        </main>
+
+        <footer className="footer">
+          <p>built with care · 2026</p>
+        </footer>
+      </div>
     </div>
   )
 }
