@@ -52,6 +52,34 @@ const blogPosts = [
   }
 ]
 
+const projects = [
+  {
+    name: 'worldcup-2026',
+    description: 'Porra web del Mundial 2026 entre amigos: fase de grupos y playoffs con sistema 1-X-2, bonus Bota de Oro y ranking automático.',
+    stack: ['TypeScript', 'PostgreSQL', 'Vercel'],
+    repo: 'https://github.com/niicogrc/worldcup-2026',
+    demo: 'https://worldcup-2026-niicogrcs-projects.vercel.app',
+  },
+  {
+    name: 'telegram-nutricion-bot',
+    description: 'Bot de Telegram con IA que manda cada mañana el menú del día y resuelve dudas de intercambios de comida. Corre 24/7 en producción.',
+    stack: ['Python', 'Claude API', 'Railway'],
+    repo: 'https://github.com/niicogrc/telegram-nutricion-bot',
+  },
+  {
+    name: 'CompressedBlocksPlugin',
+    description: 'Plugin de Paper para Minecraft que comprime bloques 9:1 por niveles y los descomprime con el crafteo vanilla.',
+    stack: ['Java', 'Paper'],
+    repo: 'https://github.com/niicogrc/CompressedBlocksPlugin',
+  },
+  {
+    name: 'portfolio',
+    description: 'Esta misma web: React + Vite con estética de terminal.',
+    stack: ['React', 'TypeScript', 'Vite'],
+    repo: 'https://github.com/niicogrc/portfolio',
+  },
+]
+
 const TYPED_COMMAND = 'whoami'
 
 function Prompt({ path = '~', children }: { path?: string; children: React.ReactNode }) {
@@ -64,6 +92,17 @@ function Prompt({ path = '~', children }: { path?: string; children: React.React
       <span className="prompt-cmd">{children}</span>
     </p>
   )
+}
+
+function monthsSince(year: number, monthIndex: number) {
+  const now = new Date()
+  const total = (now.getFullYear() - year) * 12 + now.getMonth() - monthIndex
+  const years = Math.floor(total / 12)
+  const months = total % 12
+  const parts = []
+  if (years) parts.push(`${years} ${years === 1 ? 'año' : 'años'}`)
+  if (months) parts.push(`${months} ${months === 1 ? 'mes' : 'meses'}`)
+  return parts.join(' ') || 'menos de un mes'
 }
 
 function App() {
@@ -115,6 +154,7 @@ function App() {
         <nav className="navbar" aria-label="Secciones">
           <a href="#about" className="nav-link">about.md</a>
           <a href="#experience" className="nav-link">experience/</a>
+          <a href="#projects" className="nav-link">projects/</a>
           <a href="#blog" className="nav-link">blog/</a>
           <a href="#contact" className="nav-link">contact.sh</a>
         </nav>
@@ -193,7 +233,7 @@ function App() {
                   <span className="work-badge">HEAD → actualmente</span>
                 </div>
                 <p className="work-role">Product Engineer</p>
-                <p className="work-period">jul. 2025 - actualidad · 7 meses</p>
+                <p className="work-period">jul. 2025 - actualidad · {monthsSince(2025, 6)}</p>
                 <p className="work-description">
                   Desarrollo de soluciones de alto impacto como parte del equipo de Producto.
                   Trabajando con metodología de sprints en un equipo dual, enfocado en IA, desarrollo full stack y mejora continua.
@@ -227,6 +267,31 @@ function App() {
                   <span className="skill-tag">Copilot Studio</span>
                 </div>
               </div>
+            </div>
+          </section>
+
+          {/* Projects */}
+          <section className="section fade-in" id="projects" style={{ animationDelay: '0.28s' }}>
+            <Prompt><span className="cmd-name">ls</span> <span className="cmd-flag">-la</span> projects/</Prompt>
+            <h2 className="section-title"># Proyectos</h2>
+            <div className="project-grid">
+              {projects.map(project => (
+                <article key={project.name} className="project-card">
+                  <h3 className="project-name">{project.name}</h3>
+                  <p className="project-desc">{project.description}</p>
+                  <div className="work-skills">
+                    {project.stack.map(tech => (
+                      <span key={tech} className="skill-tag">{tech}</span>
+                    ))}
+                  </div>
+                  <div className="project-links">
+                    <a href={project.repo} target="_blank" rel="noopener noreferrer">[código]</a>
+                    {project.demo && (
+                      <a href={project.demo} target="_blank" rel="noopener noreferrer">[demo]</a>
+                    )}
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
 

@@ -388,3 +388,29 @@ body {
   .main { padding: 24px 16px 8px; }
   .navbar { padding: 10px 16px; }
 }
+
+/* Projects */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.project-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.project-name { font-size: 0.95rem; font-weight: 700; color: var(--amber); }
+.project-desc { color: var(--muted); font-size: 13px; flex: 1; }
+.project-card .work-skills { margin-top: 0; }
+.project-links { display: flex; gap: 14px; font-size: 13px; }
+.project-links a { color: var(--blue); }
+.project-links a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
